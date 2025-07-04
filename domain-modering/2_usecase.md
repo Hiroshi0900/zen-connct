@@ -2,8 +2,8 @@
 left to right direction
 skinparam packageStyle rectangle
 
-actor "利用者" as User
-actor "未ログイン利用者" as Guest
+actor "ログイン済み利用者" as User
+actor "ゲスト" as Guest
 
 rectangle "ゼンコネクト" {
     package "プロフィール" {
