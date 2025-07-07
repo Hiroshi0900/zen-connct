@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zen-connect - 瞑想体験を共有しよう (グラデーション版)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Avenir', 'Helvetica', 'Arial', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #1c222e 0%, #2d3748 25%, #1a202c 50%, #2b3a4d 75%, #1c222e 100%);
+            background-attachment: fixed;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ヘッダー */
+        header {
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(28, 34, 46, 0.95) 0%, rgba(45, 55, 72, 0.95) 50%, rgba(28, 34, 46, 0.95) 100%);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(63, 192, 199, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #3fc0c7 0%, #4c6cb3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 400;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #3fc0c7;
+            text-shadow: 0 0 10px rgba(63, 192, 199, 0.3);
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, transparent 0%, rgba(63, 192, 199, 0.1) 100%);
+            color: #3fc0c7;
+            border: 2px solid #3fc0c7;
+            padding: 8px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(135deg, #3fc0c7 0%, #4c6cb3 100%);
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(63, 192, 199, 0.4);
+        }
+
+        /* メインコンテンツ */
+        main {
+            padding-top: 80px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(63, 192, 199, 0.15) 0%, 
+                rgba(76, 108, 179, 0.1) 25%,
+                rgba(253, 144, 116, 0.1) 50%,
+                rgba(156, 175, 136, 0.1) 75%,
+                rgba(63, 192, 199, 0.15) 100%);
+            border-radius: 20px;
+            margin: 40px;
+            animation: gradientShift 8s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { 
+                background: linear-gradient(135deg, 
+                    rgba(63, 192, 199, 0.15) 0%, 
+                    rgba(76, 108, 179, 0.1) 25%,
+                    rgba(253, 144, 116, 0.1) 50%,
+                    rgba(156, 175, 136, 0.1) 75%,
+                    rgba(63, 192, 199, 0.15) 100%);
+            }
+            50% { 
+                background: linear-gradient(135deg, 
+                    rgba(156, 175, 136, 0.15) 0%, 
+                    rgba(253, 144, 116, 0.1) 25%,
+                    rgba(76, 108, 179, 0.1) 50%,
+                    rgba(63, 192, 199, 0.1) 75%,
+                    rgba(156, 175, 136, 0.15) 100%);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #ffffff 0%, #3fc0c7 50%, #fd9074 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3fc0c7 0%, #4c6cb3 100%);
+            color: #ffffff;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(63, 192, 199, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(63, 192, 199, 0.5);
+            background: linear-gradient(135deg, #4c6cb3 0%, #3fc0c7 100%);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, transparent 0%, rgba(253, 144, 116, 0.1) 100%);
+            color: #fd9074;
+            border: 2px solid #fd9074;
+            padding: 14px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #fd9074 0%, #3fc0c7 100%);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(253, 144, 116, 0.4);
+        }
+
+        /* フィーチャーセクション */
+        .features {
+            padding: 80px 0;
+            background: linear-gradient(135deg, 
+                rgba(15, 23, 42, 0.7) 0%, 
+                rgba(30, 41, 59, 0.5) 50%, 
+                rgba(15, 23, 42, 0.7) 100%);
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #3fc0c7 0%, #fd9074 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, 
+                rgba(51, 65, 85, 0.6) 0%, 
+                rgba(30, 41, 59, 0.4) 50%, 
+                rgba(51, 65, 85, 0.6) 100%);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(63, 192, 199, 0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(63, 192, 199, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, 
+                rgba(63, 192, 199, 0.1) 0%, 
+                rgba(76, 108, 179, 0.1) 50%, 
+                rgba(63, 192, 199, 0.1) 100%);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3fc0c7 0%, #4c6cb3 50%, #9caf88 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(63, 192, 199, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #3fc0c7 0%, #fd9074 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-card p {
+            color: #94a3b8;
+            line-height: 1.8;
+        }
+
+        /* 体験記録サンプル */
+        .experience-preview {
+            padding: 80px 0;
+            background: linear-gradient(135deg, 
+                rgba(28, 34, 46, 0.9) 0%, 
+                rgba(45, 55, 72, 0.7) 50%, 
+                rgba(28, 34, 46, 0.9) 100%);
+        }
+
+        .experience-preview h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #3fc0c7 0%, #fd9074 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .experience-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .experience-card {
+            background: linear-gradient(135deg, 
+                rgba(51, 65, 85, 0.6) 0%, 
+                rgba(30, 41, 59, 0.4) 50%, 
+                rgba(51, 65, 85, 0.6) 100%);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .experience-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(63, 192, 199, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, 
+                rgba(63, 192, 199, 0.1) 0%, 
+                rgba(76, 108, 179, 0.05) 50%, 
+                rgba(63, 192, 199, 0.1) 100%);
+        }
+
+        .experience-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3fc0c7 0%, #9caf88 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(63, 192, 199, 0.3);
+        }
+
+        .meditation-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, rgba(63, 192, 199, 0.2) 0%, rgba(76, 108, 179, 0.2) 100%);
+            color: #3fc0c7;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 1px solid rgba(63, 192, 199, 0.3);
+        }
+
+        .experience-text {
+            color: #e2e8f0;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .experience-location {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* CTA セクション */
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, 
+                rgba(63, 192, 199, 0.15) 0%, 
+                rgba(76, 108, 179, 0.1) 25%,
+                rgba(253, 144, 116, 0.1) 50%,
+                rgba(156, 175, 136, 0.1) 75%,
+                rgba(63, 192, 199, 0.15) 100%);
+            border-radius: 20px;
+            margin: 0 20px;
+            border: 1px solid rgba(63, 192, 199, 0.2);
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ffffff 0%, #3fc0c7 50%, #fd9074 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            margin-bottom: 40px;
+        }
+
+        /* フッター */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            margin-top: 80px;
+            background: linear-gradient(135deg, 
+                rgba(15, 23, 42, 0.8) 0%, 
+                rgba(30, 41, 59, 0.6) 50%, 
+                rgba(15, 23, 42, 0.8) 100%);
+        }
+
+        .footer-content {
+            color: #94a3b8;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #3fc0c7;
+            text-shadow: 0 0 10px rgba(63, 192, 199, 0.3);
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .features h2, .experience-preview h2, .cta-section h2 {
+                font-size: 2rem;
+            }
+
+            .experience-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* アニメーション */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 背景エフェクト */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(63, 192, 199, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(253, 144, 116, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(156, 175, 136, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">zen-connect</a>
+            <ul class="nav-links">
+                <li><a href="#features">機能</a></li>
+                <li><a href="#community">コミュニティ</a></li>
+                <li><a href="#about">について</a></li>
+            </ul>
+            <a href="#" class="login-btn">ログイン</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero fade-in">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>瞑想体験を<br>共有しよう</h1>
+                    <p class="hero-subtitle">
+                        一人ひとりの瞑想体験を記録し、仲間と共有する<br>
+                        新しいマインドフルネス・コミュニティ
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="#" class="btn-primary">今すぐ始める</a>
+                        <a href="#" class="btn-secondary">詳しく見る</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="container">
+                <h2>zen-connectの特徴</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🧘</div>
+                        <h3>体験記録</h3>
+                        <p>瞑想の場所、時間、心の状態を記録。あなたの瞑想ジャーニーを可視化します。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3>コミュニティ</h3>
+                        <p>同じ志を持つ仲間と繋がり、お互いの体験を共有し合える温かなコミュニティ。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌿</div>
+                        <h3>気づきの共有</h3>
+                        <p>瞑想で得た気づきや感覚を言葉にして共有。新しい発見と成長の機会。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="experience-preview">
+            <div class="container">
+                <h2>みんなの瞑想体験</h2>
+                <div class="experience-cards">
+                    <div class="experience-card">
+                        <div class="experience-meta">
+                            <div class="user-info">
+                                <div class="user-avatar">A</div>
+                                <span>あきこ</span>
+                            </div>
+                            <span style="color: #94a3b8; font-size: 0.875rem;">2時間前</span>
+                        </div>
+                        <div class="meditation-tags">
+                            <span class="tag">マインドフルネス</span>
+                            <span class="tag">朝活</span>
+                        </div>
+                        <p class="experience-text">
+                            今朝は公園のベンチで20分間の瞑想。鳥のさえずりと風の音が心地よく、普段の雑念がすっと消えていくのを感じました。呼吸に集中することで、今この瞬間の豊かさに気づけた素敵な時間でした。
+                        </p>
+                        <div class="experience-location">
+                            📍 代々木公園 | ⏰ 06:00-06:20
+                        </div>
+                    </div>
+                    <div class="experience-card">
+                        <div class="experience-meta">
+                            <div class="user-info">
+                                <div class="user-avatar">T</div>
+                                <span>たかし</span>
+                            </div>
+                            <span style="color: #94a3b8; font-size: 0.875rem;">5時間前</span>
+                        </div>
+                        <div class="meditation-tags">
+                            <span class="tag">ヴィパッサナー</span>
+                            <span class="tag">自宅</span>
+                        </div>
+                        <p class="experience-text">
+                            仕事のストレスで心が乱れていたので、久しぶりに長めの瞑想。40分間座り続けることで、内面の静けさを取り戻せました。感情を客観視する練習になり、明日からまた頑張れそうです。
+                        </p>
+                        <div class="experience-location">
+                            📍 自宅の和室 | ⏰ 21:00-21:40
+                        </div>
+                    </div>
+                    <div class="experience-card">
+                        <div class="experience-meta">
+                            <div class="user-info">
+                                <div class="user-avatar">M</div>
+                                <span>みほ</span>
+                            </div>
+                            <span style="color: #94a3b8; font-size: 0.875rem;">1日前</span>
+                        </div>
+                        <div class="meditation-tags">
+                            <span class="tag">歩行瞑想</span>
+                            <span class="tag">自然</span>
+                        </div>
+                        <p class="experience-text">
+                            海岸での歩行瞑想。波の音と足裏の感覚に意識を向けながら、ゆっくりと歩きました。普段は急いでばかりいるけれど、こうして自分のペースで歩くことの大切さを改めて実感。
+                        </p>
+                        <div class="experience-location">
+                            📍 湘南海岸 | ⏰ 16:30-17:00
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2>今すぐ始めませんか？</h2>
+                <p>あなたの瞑想体験を記録し、素敵なコミュニティに参加しましょう</p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn-primary">無料で始める</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">プライバシーポリシー</a>
+                <a href="#">利用規約</a>
+                <a href="#">お問い合わせ</a>
+                <a href="#">ヘルプ</a>
+            </div>
+            <div class="footer-content">
+                <p>&copy; 2025 zen-connect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
